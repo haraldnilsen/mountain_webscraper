@@ -20,7 +20,7 @@ options.add_argument("headless")
 
 
 def finnfjell():
-    fjellvalg=input('Hvilket fjell skal du på? ')
+    fjellvalg=input('Hvilket fjell skal du på?  ')
     browser.get('https://ut.no/')
     sleep(0.3)
     søk=browser.find_element_by_id('input-field')
