@@ -6,23 +6,21 @@ from time import sleep
 from bs4 import BeautifulSoup
 import requests
 
+def get_available_mountains(browser:webdriver.Chrome, mountain_name:str):
+    """Searches for available mountains based on the given mountain name and
+    displays them. Takes user input to further refine search results.
 
-
-options = Options()
-options.headless = True
-options.add_argument('start-maximized')
-
-browser = webdriver.Chrome(r'C:\Users\haral\Documents\Programmering\Python\Chromedriver\chromedriver.exe')
-options = webdriver.ChromeOptions()
-options.add_argument("headless")
-##self.driver = webdriver.Chrome(executable_path=r'C:\Users\haral\Downloads\chromedriver.exe',options=options)
-
-def finnfjell():
-    fjellvalg=input('Hvilket fjell skal du på?  ')
+    @param browser: The Selenium WebDriver object used for web navigation.
+    @type browser: selenium.webdriver.Chrome
+    @param mountain_name: The name of the mountain to search for.
+    @type mountain_name: str
+        
+    @rtype: None
+    """
     browser.get('https://ut.no/')
     sleep(0.3)
     søk=browser.find_element_by_id('input-field')
-    søk.send_keys(fjellvalg)
+    søk.send_keys(mountain_name)
     søk.send_keys(Keys.ENTER)
     sleep(0.5)
     
@@ -51,22 +49,3 @@ def finnfjell():
             if teller >=10:
                       break
         bruker=int(input('Du søkte "{}", hvilken tur tenker du på? \n'.format(fjellvalg)))
-    
-    valg=valg[(bruker)-1]
-    valg.click()
-    resultat=browser.current_url
-    hentinfo(resultat,fjellvalg)
-
-def hentinfo(nettside,fjell):
-    kilde = requests.get(nettside)
-    soup = BeautifulSoup(kilde.content, 'html.parser')
-    info = soup.find(class_='Container-text')
-    turinfo = browser.find_element_by_class_name('info-list')
-    turinfo = turinfo.text.split('\n')
-    teller=0
-    print('Her er informasjon om turen til {}:'.format(fjell),'\n')
-    for i in range(6):
-        print(turinfo[teller],'-',turinfo[teller+1])
-        teller=teller+2
-
-finnfjell()
