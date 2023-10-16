@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
 from bs4 import BeautifulSoup
@@ -18,40 +19,46 @@ def get_available_mountains(browser:webdriver.Chrome, user_mountain:str) -> str:
     @rtype: None
     """
     browser.get('https://ut.no/')
-    sleep(0.3)
-    search=browser.find_element_by_id('input-field')
+    sleep(0.5)
+
+    if (browser.find_element(By.CLASS_NAME, 'coi-button-group') != None):
+        sleep(0.5)
+        accept_cookie_button = browser.find_element(By.CLASS_NAME, 'coi-banner__accept')
+        accept_cookie_button.click()
+        sleep(0.5)
+
+    search = browser.find_element(By.ID, 'input-field')
     search.send_keys(user_mountain)
     search.send_keys(Keys.ENTER)
     sleep(0.5)
     
-    cookie=browser.find_element_by_class_name('c-button')
-    cookie.click()
-    sleep(0.5)
-    
-    valg=browser.find_elements_by_class_name('explore-page-search__item-link')
+    categories=browser.find_elements(By.CLASS_NAME, 'explore-page-search__category')
+    correct_category = categories[2]
+    options = correct_category.find_elements(By.CLASS_NAME, 'explore-page-search__item-link')
+
     teller=1
-    if len(valg)>5:
-        for i in valg[:5]:
+    if len(options)>5:
+        for i in options[:5]:
             print(teller,'-',i.text)
             teller+=1
-        bruker=int(input('Du søkte "{}", hvilken tur tenker du på? (skriv 0 for flere alternativer) \n'.format(fjellvalg)))
+        bruker=int(input('Du søkte "{}", hvilken tur tenker du på? (skriv 0 for flere alternativer) \n'.format(user_mountain)))
 
     else:
-        for i in valg:
+        for i in options:
             print(teller,'-',i.text)
             teller+=1
-        bruker=int(input('Du søkte "{}", hvilken tur tenker du på?\n'.format(fjellvalg)))
+        bruker=int(input('Du søkte "{}", hvilken tur tenker du på?\n'.format(user_mountain)))
 
     if bruker == 0:
-        for i in valg[5:len(valg)]:
+        for i in options[5:len(options)]:
             print(teller,'-',i.text)
             teller+=1
             if teller >=10:
                       break
-        bruker=int(input('Du søkte "{}", hvilken tur tenker du på? \n'.format(fjellvalg)))
+        bruker=int(input('Du søkte "{}", hvilken tur tenker du på? \n'.format(user_mountain)))
 
-    valg=valg[(bruker)-1]
-    valg.click()
+    options=options[bruker-1]
+    options.click()
     resultat=browser.current_url
 
     return resultat
@@ -69,11 +76,9 @@ def get_mountain_information(browser: webdriver.Chrome, mountain_name:str):
         
     @rtype: None
     """
-
-    turinfo = browser.find_element_by_class_name('info-list')
+    sleep(0.5)
+    turinfo = browser.find_element(By.CLASS_NAME, 'info-list')
     turinfo = turinfo.text.split('\n')
-    teller=0
     print('Her er informasjon om turen til {}:'.format(mountain_name),'\n')
-    for i in range(6):
-        print(turinfo[teller],'-',turinfo[teller+1])
-        teller=teller+2
+    for i in range(0, len(turinfo) - 1):
+         print(turinfo[i])

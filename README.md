@@ -1,7 +1,11 @@
 # Mountain Info Web Scraper
 
 ## Description
-This Python script allows you to enter the name of a mountain and retrieve information about that mountain. The script uses Selenium for web automation and BeautifulSoup for HTML parsing to scrape data from `https://ut.no/`.
+This Python script allows you to enter the name of a mountain and retrieve information about that mountain. The script uses Selenium for web automation and BeautifulSoup for HTML parsing to scrape data from `https://ut.no/`. The project was made as my first python-project back in 2019 to learn webscraping, but the code has later been refactored.
+
+##
+![Showing the app](./img/image.png)
+
 
 ## Prerequisites
 - Python 3.x

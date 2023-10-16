@@ -1,5 +1,6 @@
 from scraping import get_available_mountains, get_mountain_information
 from selenium import webdriver
+from time import sleep
 import os
 
 # Functions
@@ -11,6 +12,8 @@ def find_mountain():
     user_mountain = input('Hvilket fjell skal du på? ')
     
     mountain_name = get_available_mountains(browser, user_mountain)
+
+    sleep(1)
 
     get_mountain_information(browser, mountain_name)
 
